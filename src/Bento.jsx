@@ -1,103 +1,137 @@
+import { useCallback, useEffect, useState } from 'react'
+import useEmblaCarousel from 'embla-carousel-react'
 
-export default function Bneto() {
+const showcaseSlides = [
+  {
+    id: 'preview-1',
+    label: 'Editorial launch pad',
+    description: 'Clean hierarchy and bold serif headlines that keep content front and center.',
+  },
+  {
+    id: 'preview-2',
+    label: 'Product spotlight',
+    description: 'Hero storytelling with responsive layouts and refined card clusters.',
+  },
+  {
+    id: 'preview-3',
+    label: 'Boutique studio',
+    description: 'Warm textures, soft gradients, and tactile details for a handmade feel.',
+  },
+  {
+    id: 'preview-4',
+    label: 'Service hub',
+    description: 'Structured grids and purposeful whitespace designed for conversion-focused founders.',
+  },
+]
+
+function ShowcaseCarousel() {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ align: 'center', loop: false, containScroll: 'trimSnaps' })
+  const [canScrollPrev, setCanScrollPrev] = useState(false)
+  const [canScrollNext, setCanScrollNext] = useState(false)
+  const [selectedIndex, setSelectedIndex] = useState(0)
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return
+    setCanScrollPrev(emblaApi.canScrollPrev())
+    setCanScrollNext(emblaApi.canScrollNext())
+    setSelectedIndex(emblaApi.selectedScrollSnap())
+  }, [emblaApi])
+
+  useEffect(() => {
+    if (!emblaApi) return
+    onSelect()
+    emblaApi.on('select', onSelect)
+    emblaApi.on('reInit', onSelect)
+    return () => {
+      emblaApi.off('select', onSelect)
+      emblaApi.off('reInit', onSelect)
+    }
+  }, [emblaApi, onSelect])
+
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi])
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi])
+
   return (
-    <div className="bg-gray-50 py-24 sm:py-32">
-      <div className="mx-auto max-w-2xl px-6 lg:max-w-7xl lg:px-8">
-        <h2 className="text-center text-base/7 font-semibold text-indigo-600">Why choose us</h2>
-        <p className="mx-auto mt-2 max-w-lg text-center text-4xl font-semibold tracking-tight text-balance text-gray-950 sm:text-5xl">
-          Everything you need for a professional website
-        </p>
-        <div className="mt-10 grid gap-4 sm:mt-16 lg:grid-cols-3 lg:grid-rows-2">
-          <div className="relative lg:row-span-2">
-            <div className="absolute inset-px rounded-lg bg-white lg:rounded-l-4xl" />
-            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] lg:rounded-l-[calc(2rem+1px)]">
-              <div className="px-8 pt-8 pb-3 sm:px-10 sm:pt-10 sm:pb-0">
-                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950 max-lg:text-center">
-                  Mobile-responsive design
-                </p>
-                <p className="mt-2 max-w-lg text-sm/6 text-gray-600 max-lg:text-center">
-                  Your site looks great on any device. Reach customers on phones, tablets, and desktops effortlessly.
-                </p>
-              </div>
-              <div className="@container relative min-h-120 w-full grow max-lg:mx-auto max-lg:max-w-sm">
-                <div className="absolute inset-x-10 top-10 bottom-0 overflow-hidden rounded-t-[12cqw] border-x-[3cqw] border-t-[3cqw] border-gray-700 bg-gray-900 shadow-2xl">
-                  <img
-                    alt=""
-                    src="https://tailwindcss.com/plus-assets/img/component-images/bento-03-mobile-friendly.png"
-                    className="size-full object-cover object-top"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="pointer-events-none absolute inset-px rounded-lg shadow-sm outline outline-black/5 lg:rounded-l-4xl" />
+    <section className="w-full">
+      <div className="rounded-[36px] border border-slate-200 bg-white p-6 shadow-[0_40px_80px_rgba(15,23,42,0.12)] sm:p-10">
+        <div className="flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-500">Featured work</p>
+            <h3 className="mt-1 text-3xl font-semibold text-slate-900 sm:text-4xl">We build modern, good-looking websites fast</h3>
           </div>
-          <div className="relative max-lg:row-start-1">
-            <div className="absolute inset-px rounded-lg bg-white max-lg:rounded-t-4xl" />
-            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] max-lg:rounded-t-[calc(2rem+1px)]">
-              <div className="px-8 pt-8 sm:px-10 sm:pt-10">
-                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950 max-lg:text-center">Lightning-fast loading</p>
-                <p className="mt-2 max-w-lg text-sm/6 text-gray-600 max-lg:text-center">
-                  Optimized for speed. Your website loads quickly, keeping visitors engaged and improving search rankings.
-                </p>
-              </div>
-              <div className="flex flex-1 items-center justify-center px-8 max-lg:pt-10 max-lg:pb-12 sm:px-10 lg:pb-2">
-                <img
-                  alt=""
-                  src="https://tailwindcss.com/plus-assets/img/component-images/bento-03-performance.png"
-                  className="w-full max-lg:max-w-xs"
-                />
-              </div>
-            </div>
-            <div className="pointer-events-none absolute inset-px rounded-lg shadow-sm outline outline-black/5 max-lg:rounded-t-4xl" />
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={scrollPrev}
+              disabled={!canScrollPrev}
+              className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onClick={scrollNext}
+              disabled={!canScrollNext}
+              className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Next
+            </button>
           </div>
-          <div className="relative max-lg:row-start-3 lg:col-start-2 lg:row-start-2">
-            <div className="absolute inset-px rounded-lg bg-white" />
-            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)]">
-              <div className="px-8 pt-8 sm:px-10 sm:pt-10">
-                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950 max-lg:text-center">Secure and reliable hosting</p>
-                <p className="mt-2 max-w-lg text-sm/6 text-gray-600 max-lg:text-center">
-                  Built-in security protects your site and customers. Focus on your business while we handle the tech.
-                </p>
-              </div>
-              <div className="@container flex flex-1 items-center max-lg:py-6 lg:pb-2">
-                <img
-                  alt=""
-                  src="https://tailwindcss.com/plus-assets/img/component-images/bento-03-security.png"
-                  className="h-[min(152px,40cqw)] object-cover"
-                />
-              </div>
-            </div>
-            <div className="pointer-events-none absolute inset-px rounded-lg shadow-sm outline outline-black/5" />
-          </div>
-          <div className="relative lg:row-span-2">
-            <div className="absolute inset-px rounded-lg bg-white max-lg:rounded-b-4xl lg:rounded-r-4xl" />
-            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] max-lg:rounded-b-[calc(2rem+1px)] lg:rounded-r-[calc(2rem+1px)]">
-              <div className="px-8 pt-8 pb-3 sm:px-10 sm:pt-10 sm:pb-0">
-                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950 max-lg:text-center">
-                  Easy customization
-                </p>
-                <p className="mt-2 max-w-lg text-sm/6 text-gray-600 max-lg:text-center">
-                  Customize without complexity. Add features like contact forms, galleries, or integrations in minutes.
-                </p>
-              </div>
-              <div className="relative min-h-120 w-full grow">
-                <div className="absolute top-10 right-0 bottom-0 left-10 overflow-hidden rounded-tl-xl bg-gray-900 shadow-2xl outline outline-white/10">
-                  <div className="flex bg-gray-900 outline outline-white/5">
-                    <div className="-mb-px flex text-sm/6 font-medium text-gray-400">
-                      <div className="border-r border-b border-r-white/10 border-b-white/20 bg-white/5 px-4 py-2 text-white">
-                        NotificationSetting.jsx
-                      </div>
-                      <div className="border-r border-gray-600/10 px-4 py-2">App.jsx</div>
-                    </div>
+        </div>
+        <div className="mt-8 overflow-hidden rounded-[30px] bg-slate-50 p-6">
+          <div className="embla" ref={emblaRef}>
+            <div className="flex gap-8 py-3">
+              {showcaseSlides.map((slide) => (
+                <article
+                  key={slide.id}
+                  className="min-w-[420px] flex-0 rounded-[32px] border border-white/60 bg-white p-6 shadow-[0_30px_80px_rgba(15,23,42,0.15)] transition hover:-translate-y-1 hover:shadow-[0_40px_90px_rgba(15,23,42,0.2)] sm:min-w-[520px] lg:min-w-[560px]"
+                >
+                  <div className="h-56 w-full rounded-3xl bg-gradient-to-br from-rose-100 via-white to-amber-100 shadow-inner" />
+                  <div className="mt-6 space-y-3">
+                    <h4 className="text-2xl font-semibold text-slate-900">{slide.label}</h4>
+                    <p className="text-sm leading-relaxed text-slate-600">{slide.description}</p>
                   </div>
-                  <div className="px-6 pt-6 pb-14">{/* Your code example */}</div>
-                </div>
-              </div>
+                  <div className="mt-8 flex items-center justify-between text-xs uppercase tracking-[0.35em] text-slate-400">
+                    <span>Preview</span>
+                    <span>Touch-friendly</span>
+                  </div>
+                </article>
+              ))}
             </div>
-            <div className="pointer-events-none absolute inset-px rounded-lg shadow-sm outline outline-black/5 max-lg:rounded-b-4xl lg:rounded-r-4xl" />
           </div>
         </div>
       </div>
-    </div>
+      <div className="mt-6 flex justify-center gap-2">
+        {showcaseSlides.map((_, idx) => (
+          <button
+            key={idx}
+            type="button"
+            onClick={() => emblaApi?.scrollTo(idx)}
+            className={`h-2.5 w-12 rounded-full transition ${selectedIndex === idx ? 'bg-rose-600' : 'bg-slate-300/80'}`}
+            aria-label={`Go to slide ${idx + 1}`}
+          />
+        ))}
+      </div>
+    </section>
+  )
+}
+
+export default function Bento() {
+  return (
+    <section className="bg-gradient-to-b from-white via-white to-slate-50 py-24 sm:py-32">
+      <div className="mx-auto flex w-full flex-col items-center px-6 text-center">
+        <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-500">Portfolio showcase</p>
+        <h2 className="mt-2 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+          We build modern, good-looking websites fast
+        </h2>
+        <p className="mt-4 max-w-2xl text-lg text-slate-600">
+          These placeholder previews hint at the systems we deliver—tight typography, subtle motion, and layouts that highlight content
+          while keeping brands in premium control.
+        </p>
+        <div className="mt-12 w-full">
+          <ShowcaseCarousel />
+        </div>
+      </div>
+    </section>
   )
 }
