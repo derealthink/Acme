@@ -1,16 +1,38 @@
-# React + Vite
+# Acme
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web agency website project with a React frontend and a separate Node.js backend. This repository is separate from my 42 School curriculum collection.
 
-Currently, two official plugins are available:
+## Project structure
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+| Directory | Purpose |
+| --- | --- |
+| `src/` | React pages and components, including the homepage, pricing, FAQ, login and registration |
+| `src/context/` | Authentication context |
+| `Acme_backend/` | Backend server, database configuration, middleware, models and routes |
 
-## React Compiler
+## Frontend development
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Requires Node.js and npm compatible with the Vite version in `package.json`.
 
-## Expanding the ESLint configuration
+```sh
+git clone https://github.com/derealthink/Acme.git
+cd Acme
+npm ci
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Use the local URL printed by Vite.
+
+```sh
+npm run build    # create the frontend production bundle
+npm run preview  # serve that bundle locally
+npm run lint     # run ESLint
+```
+
+## Backend
+
+The backend has its own `package.json` and database configuration. Review `Acme_backend/server.js`, `Acme_backend/config/database.js` and the authentication middleware before configuring a local backend. The frontend development server alone does not start backend services or provide working account flows.
+
+## Stack
+
+React, React Router, Vite, Tailwind CSS, React Hook Form and a separate JavaScript backend. The repository currently provides application source rather than a documented production deployment.
